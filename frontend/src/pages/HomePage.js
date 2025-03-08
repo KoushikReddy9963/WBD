@@ -4,34 +4,12 @@ import realimage from './real.jpg';
 import houseimage from './high-view-toy-model-house-keys_23-2148301692.jpg';
 
 const Homepage = () => {
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   });
-
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleChange = (e) => {
     setFormData({
@@ -42,37 +20,43 @@ const Homepage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
-
+    
     try {
-      const response = await fetch('http://localhost:5000/api/feedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
+        console.log('Submitting feedback:', formData); // Debug log
+        
+        const response = await fetch('http://localhost:5000/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
 
-      if (!response.ok) {
+        console.log('Response status:', response.status); // Debug log
+
         const result = await response.json();
-        throw new Error(result.message || 'Failed to submit feedback');
-      }
+        console.log('Response data:', result); // Debug log
 
-      const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to submit feedback');
+        }
 
-      alert(result.message);
+        alert('Feedback submitted successfully!');
 
-      setFormData({
-        name: '',
-        email: '',
-        message: ''
-      });
+        // Clear form
+        setFormData({
+            name: '',
+            email: '',
+            message: ''
+        });
 
     } catch (error) {
-      alert('Error: ' + error.message);
+        console.error('Submission error:', error); // Debug log
+        alert('Error submitting feedback: ' + error.message);
     }
   };
+
 
   const showSidebar = () => {
     document.getElementById('sidebar').style.display = 'flex';
@@ -168,7 +152,6 @@ const Homepage = () => {
                 onChange={handleChange}
                 required
               />
-              {errors.name && <p className="error">{errors.name}</p>}
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
@@ -180,7 +163,6 @@ const Homepage = () => {
                 onChange={handleChange}
                 required
               />
-              {errors.email && <p className="error">{errors.email}</p>}
             </div>
             <div className="form-group">
               <label htmlFor="message">Message</label>
@@ -191,15 +173,16 @@ const Homepage = () => {
                 onChange={handleChange}
                 required
               ></textarea>
-              {errors.message && <p className="error">{errors.message}</p>}
             </div>
             <button type="submit" className="btn submit-btn">Submit Feedback</button>
           </form>
         </div>
       </section>
 
+
       <section className="footer">
         <div className="box-container">
+          {/* Footer Boxes */}
           <div className="box">
             <h3>quick links</h3>
             <a href="#home">
@@ -215,14 +198,32 @@ const Homepage = () => {
           </div>
 
           <div className="box">
+            <h3>extra links</h3>
+            <a href="#!">my account</a>
+            <a href="#!">terms of use</a>
+            <a href="#!">privacy policy</a>
+          </div>
+
+          <div className="box">
+            <h3>contact info</h3>
+            <a href="#!">+91 9963909924</a>
+            <a href="#!">@gmail.com</a>
+            <a href="#!">Sri City (AP), 517646</a>
+          </div>
+
+          <div className="box">
             <h3>follow us</h3>
-            <a href="#!"> <i className="fab fa-facebook"></i> facebook </a>
-            <a href="#!"> <i className="fab fa-twitter"></i> twitter </a>
-            <a href="#!"> <i className="fab fa-instagram"></i> instagram </a>
+            <a href="#!">facebook</a>
+            <a href="#!">twitter</a>
+            <a href="#!">instagram</a>
+            <a href="#!">linkedin</a>
+            <a href="#!">github</a>
           </div>
         </div>
 
-        <div className="credit">created by <span> IIITS Students </span> | all rights reserved!</div>
+        <div className="credit">
+          created by <span>Nourish Nest by spoonacular api</span> | All rights are reserved!
+        </div>
       </section>
     </>
   );
